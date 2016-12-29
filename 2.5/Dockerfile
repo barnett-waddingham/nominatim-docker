@@ -31,6 +31,11 @@ RUN git clone --recursive git://github.com/twain47/Nominatim.git ./src
 RUN cd ./src && git checkout $NOMINATIM_VERSION && git submodule update --recursive --init && \
   ./autogen.sh && ./configure && make
 
+# Download data files for British Isles
+RUN curl http://www.nominatim.org/data/gb_postcode_data.sql.gz -o /app/src/data/gb_postcode_data.sql.gz 
+RUN curl http://www.nominatim.org/data/wikipedia_article.sql.bin -o /app/src/data/wikipedia_article.sql.bin 
+RUN curl http://www.nominatim.org/data/wikipedia_redirect.sql.bin -o /app/src/data/wikipedia_redirect.sql.bin 
+
 
 # Nominatim create site
 COPY local.php ./src/settings/local.php
