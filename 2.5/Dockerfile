@@ -8,7 +8,7 @@ RUN update-locale LANG=en_US.UTF-8
 
 # Install packages http://wiki.openstreetmap.org/wiki/Nominatim/Installation#Ubuntu.2FDebian
 RUN apt-get -y update --fix-missing && \
-    apt-get install -y build-essential libxml2-dev libpq-dev libbz2-dev libtool automake \
+    apt-get install -y vim build-essential libxml2-dev libpq-dev libbz2-dev libtool automake \
     libproj-dev libboost-dev libboost-system-dev libboost-filesystem-dev \
     libboost-thread-dev libexpat-dev gcc proj-bin libgeos-c1 libgeos++-dev \
     libexpat-dev php5 php-pear php5-pgsql php5-json php-db libapache2-mod-php5 \
@@ -45,7 +45,6 @@ RUN rm -rf /var/www/html/* && ./src/utils/setup.php --create-website /var/www/ht
 COPY nominatim.conf /etc/apache2/sites-enabled/000-default.conf
 
 # Load initial data
-RUN curl $PBF_DATA --create-dirs -o /app/src/data.osm.pbf
 RUN service postgresql start && \
     sudo -u postgres psql postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='nominatim'" | grep -q 1 || sudo -u postgres createuser -s nominatim && \
     sudo -u postgres psql postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='www-data'" | grep -q 1 || sudo -u postgres createuser -SDR www-data && \
