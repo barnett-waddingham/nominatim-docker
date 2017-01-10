@@ -35,7 +35,7 @@ RUN cd ./src && git checkout $NOMINATIM_VERSION && git submodule update --recurs
 RUN curl http://www.nominatim.org/data/gb_postcode_data.sql.gz -o /app/src/data/gb_postcode_data.sql.gz 
 RUN curl http://www.nominatim.org/data/wikipedia_article.sql.bin -o /app/src/data/wikipedia_article.sql.bin 
 RUN curl http://www.nominatim.org/data/wikipedia_redirect.sql.bin -o /app/src/data/wikipedia_redirect.sql.bin 
-RUN curl http://download.geofabrik.de/europe/british-isles-latest.osm.pbf -o /app/src/data/data.osm.pbf
+RUN curl http://download.geofabrik.de/europe/british-isles-latest.osm.pbf -o /app/src/data/british-isles-latest.osm.pbf 
 
 # Nominatim create site
 COPY local.php ./src/settings/local.php
@@ -50,7 +50,7 @@ RUN service postgresql start && \
     sudo -u postgres psql postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='www-data'" | grep -q 1 || sudo -u postgres createuser -SDR www-data && \
     sudo -u postgres psql postgres -c "DROP DATABASE IF EXISTS nominatim" && \
     useradd -m -p password1234 nominatim && \
-    sudo -u nominatim ./src/utils/setup.php --osm-file /app/src/data/data.osm.pbf --all --threads 2 && \
+    sudo -u nominatim ./src/utils/setup.php --osm-file /app/src/data/british-isles-latest.osm.pbf --all --threads 2 && \
     service postgresql stop
 
 EXPOSE 5432
